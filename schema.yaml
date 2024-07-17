@@ -1,0 +1,109 @@
+version: v1-draft
+exports:
+  - name: greetUser
+    description: |
+      This function greets a user without requiring any input or output.
+    codeSamples:
+      - lang: typescript
+        source: |
+          console.log('Hello User!')
+  - name: processText
+    description: |
+      This function demonstrates how you can handle text input and return 
+      a JSON encoded array of word lengths.
+    codeSamples:
+      - lang: typescript
+        source: |
+          return input.split(' ').map(c => c.length)
+    input:
+      type: string
+      contentType: text/plain; charset=UTF-8
+      description: A plain text string input
+    output:
+      type: array
+      items:
+        type: integer
+      contentType: application/json
+      description: An array of word lengths encoded as JSON
+  - name: convertTemperature
+    description: |
+      This function demonstrates the use of complex parameters. It takes a 
+      TemperatureScale enum and returns a TemperatureReading JSON object.
+    codeSamples:
+      - lang: typescript
+        source: |
+          return { scale: TemperatureScale.celsius, value: 123 }
+    input:
+      $ref: "#/schemas/TemperatureScale"
+    output:
+      $ref: "#/schemas/TemperatureReading"
+imports:
+  - name: logMessage
+    input:
+      type: string
+      contentType: text/plain; charset=UTF-8
+      description: The message to log
+    output:
+      type: boolean
+      contentType: application/json
+      description: Result of the logging operation as a boolean
+    description: >
+      This is a host function that logs a message to the system. Host functions 
+      can perform system-level tasks.
+  - name: databaseRead
+    description: Reads data from the database using the provided key
+    input:
+      type: string
+      contentType: text/plain; charset=UTF-8
+      description: The key to look up in the database
+    output:
+      type: buffer
+      description: The raw byte values stored at the key
+  - name: databaseWrite
+    description: Writes data to the database
+    input:
+      $ref: "#/schemas/DatabaseWriteParams"
+schemas:
+  - name: DatabaseWriteParams
+    contentType: application/json
+    description: Parameters for writing data to the database
+    properties:
+      - name: key
+        type: string
+        description: The key for the database entry
+      - name: value
+        #type: buffer
+        type: string
+        description: The value to store at the key
+  - name: TemperatureScale
+    description: Different scales of temperature measurement
+    enum:
+      - celsius
+      - fahrenheit
+      - kelvin
+  - name: OperationStatus
+    description: The status of an operation
+    enum:
+      - success
+      - failure
+  - name: TemperatureReading
+    contentType: application/json
+    description: A JSON object representing a temperature reading
+    required:
+      - scale
+      - value
+    properties:
+      - $ref: "#/schemas/TemperatureScale"
+        name: scale
+        description: The scale of the temperature reading
+      - name: value
+        #type: number
+        #format: float
+        type: integer
+        description: The temperature value
+      - name: timestamp
+        type: string
+        format: date-time
+        description: The time when the temperature was recorded
+
+
