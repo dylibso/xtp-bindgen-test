@@ -6,36 +6,15 @@ import (
 	"github.com/extism/go-pdk"
 )
 
-//go:export logMessage
-func logMessage(msgPtr uint64) uint64 {
-	msgMem := pdk.FindMemory(msgPtr)
-	msg := string(msgMem.ReadBytes())
+//go:export reflectObjectHost
+func reflectObjectHost(kPtr uint64) uint64 {
+	kMem := pdk.FindMemory(kPtr)
+	k := string(kMem.ReadBytes())
 
-	fmt.Println(msg)
+	fmt.Println(k)
 
-	valMem := pdk.AllocateString("true")
-	return valMem.Offset()
-}
-
-//go:export databaseRead
-func databaseRead(keyPtr uint64) uint64 {
-	keyMem := pdk.FindMemory(keyPtr)
-	key := string(keyMem.ReadBytes())
-
-	fmt.Println("databaseRead at key: " + key)
-
-	valMem := pdk.AllocateBytes([]byte("some bytes"))
-	return valMem.Offset()
-}
-
-//go:export databaseWrite
-func databaseWrite(wPtr uint64) uint64 {
-	wMem := pdk.FindMemory(wPtr)
-	writeS := string(wMem.ReadBytes())
-
-	fmt.Println("databaseWrite: " + writeS)
-
-	return 0
+	kRet := pdk.AllocateString(k)
+	return kRet.Offset()
 }
 
 func main() {}

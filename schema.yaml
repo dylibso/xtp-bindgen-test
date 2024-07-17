@@ -1,109 +1,110 @@
 version: v1-draft
 exports:
-  - name: greetUser
+  - name: reflectObject
     description: |
-      This function greets a user without requiring any input or output.
+      This function takes a KitchenSinkObject and returns a KitchenSinkObject.
+      It should come out the same way it came in.
     codeSamples:
       - lang: typescript
         source: |
-          console.log('Hello User!')
-  - name: processText
-    description: |
-      This function demonstrates how you can handle text input and return 
-      a JSON encoded array of word lengths.
-    codeSamples:
-      - lang: typescript
-        source: |
-          return input.split(' ').map(c => c.length)
+          // pass this through the host function and return it back
+          return reflectObjectHost(input)
     input:
-      type: string
-      contentType: text/plain; charset=UTF-8
-      description: A plain text string input
+      $ref: "#/schemas/KitchenSinkObject"
     output:
-      type: array
-      items:
-        type: integer
-      contentType: application/json
-      description: An array of word lengths encoded as JSON
-  - name: convertTemperature
-    description: |
-      This function demonstrates the use of complex parameters. It takes a 
-      TemperatureScale enum and returns a TemperatureReading JSON object.
-    codeSamples:
-      - lang: typescript
-        source: |
-          return { scale: TemperatureScale.celsius, value: 123 }
-    input:
-      $ref: "#/schemas/TemperatureScale"
-    output:
-      $ref: "#/schemas/TemperatureReading"
+      $ref: "#/schemas/KitchenSinkObject"
 imports:
-  - name: logMessage
+  - name: reflectObjectHost
+    description: |
+      This function takes a KitchenSinkObject and returns a KitchenSinkObject.
+      It should come out the same way it came in. It's the same as the export.
+      But the export should call this.
     input:
-      type: string
-      contentType: text/plain; charset=UTF-8
-      description: The message to log
+      $ref: "#/schemas/KitchenSinkObject"
     output:
-      type: boolean
-      contentType: application/json
-      description: Result of the logging operation as a boolean
-    description: >
-      This is a host function that logs a message to the system. Host functions 
-      can perform system-level tasks.
-  - name: databaseRead
-    description: Reads data from the database using the provided key
-    input:
-      type: string
-      contentType: text/plain; charset=UTF-8
-      description: The key to look up in the database
-    output:
-      type: buffer
-      description: The raw byte values stored at the key
-  - name: databaseWrite
-    description: Writes data to the database
-    input:
-      $ref: "#/schemas/DatabaseWriteParams"
+      $ref: "#/schemas/KitchenSinkObject"
 schemas:
-  - name: DatabaseWriteParams
-    contentType: application/json
-    description: Parameters for writing data to the database
-    properties:
-      - name: key
-        type: string
-        description: The key for the database entry
-      - name: value
-        #type: buffer
-        type: string
-        description: The value to store at the key
-  - name: TemperatureScale
-    description: Different scales of temperature measurement
-    enum:
-      - celsius
-      - fahrenheit
-      - kelvin
-  - name: OperationStatus
-    description: The status of an operation
-    enum:
-      - success
-      - failure
-  - name: TemperatureReading
-    contentType: application/json
-    description: A JSON object representing a temperature reading
+  - name: EmbeddedObject
+    description: An embedded object, has some arrays too
     required:
-      - scale
-      - value
+      - aBoolArray
+      - anEnumArray
+      - aStringArray
+      - anIntArray
     properties:
-      - $ref: "#/schemas/TemperatureScale"
-        name: scale
-        description: The scale of the temperature reading
-      - name: value
-        #type: number
-        #format: float
-        type: integer
-        description: The temperature value
-      - name: timestamp
+      - name: aBoolArray
+        description: an array of bools
+        type: array
+        items:
+          type: boolean
+      - name: aStringArray
+        description: an array of strings
+        type: array
+        items:
+          type: string
+      - name: anEnumArray
+        description: an array of enums
+        type: array
+        items:
+          $ref: "#/schemas/AStringEnum"
+      - name: anIntArray
+        description: an array of enums
+        type: array
+        items:
+          type: integer
+  - name: AStringEnum
+    description: A string enum
+    type: string
+    enum:
+      - option1
+      - option2
+      - option3
+  - name: KitchenSinkObject
+    contentType: application/json
+    description: A json object with every type of property
+    required:
+      - aString
+      - anInt
+      - aFloat
+      - aDouble
+      - aBool
+      - anEnum
+      - anEmbeddedObject
+      - anEmbeddedObjectArray
+      #- anUntypedObject
+    properties:
+      - name: anOptionalString
         type: string
-        format: date-time
-        description: The time when the temperature was recorded
-
-
+        description: A string but not required
+      - name: aString
+        type: string
+        description: A String
+      - name: anInt
+        type: integer
+        description: An Integer
+      - name: aFloat
+        type: number
+        format: float
+        description: A Float
+      - name: aDouble
+        type: number
+        format: double
+        description: A Double
+      - name: aBool
+        type: boolean
+        description: A Boolean
+      # TODO put back after bug fix
+      # - name: anUntypedObject
+      #   type: object
+      #   description: An untyped object
+      - name: anEnum
+        description: A string enum (prop comment)
+        $ref: "#/schemas/AStringEnum"
+      - name: anEmbeddedObject
+        description: A embedded object array(prop comment)
+        $ref: "#/schemas/EmbeddedObject"
+      - name: anEmbeddedObjectArray
+        description: A embedded object array (prop comment)
+        type: array
+        items:
+          $ref: "#/schemas/EmbeddedObject"

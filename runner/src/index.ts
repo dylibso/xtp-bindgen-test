@@ -1,13 +1,28 @@
 import { Test } from "@dylibso/xtp-test";
 
+const EmbeddedObject = {
+  aBoolArray: [true, false, true],
+  aStringArray: ["Hello", "🌍", "World!"],
+  anEnumArray: ['option1', 'option2', 'option3'],
+  anIntArray: [1, 2, 3],
+}
+
+const KitchenSink = {
+  aString: "🌍Hello 🌍 World!🌍",
+  anInt: 42,
+  aFloat: 3.14,
+  aDouble: 3.141592653589793238462643383279502884197,
+  aBool: true,
+  //anUntypedObject: { hello: 'world' }, TODO uncomment after bug fix
+  anEnum: 'option1',
+  anEmbeddedObject: EmbeddedObject,
+  anEmbeddedObjectArray: [EmbeddedObject, EmbeddedObject]
+}
+
 export function test() {
-  let res = Test.callString("processText", "hello world")
-  Test.assertEqual("processText('hello world') = [5,5]", res, "[5,5]")
-
-  res = Test.callString("convertTemperature", "celsius")
-  let parsed = JSON.parse(res)
-  Test.assertEqual("convertTemperature.value = 123", parsed.value, 123)
-  Test.assertEqual("convertTemperature.scale = celsius", parsed.scale, 'celsius')
-
+  let input = JSON.stringify(KitchenSink)
+  let output = JSON.parse(Test.callString("reflectObject", input))
+  // assuming if we re-stringify them here the formatting should be the same
+  Test.assertEqual("reflectObject preserved the KitchenSink", JSON.stringify(output), JSON.stringify(KitchenSink))
   return 0;
 }
