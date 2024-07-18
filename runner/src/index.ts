@@ -29,10 +29,13 @@ export function test() {
   let outputS = Test.callString("reflectUtf8String", inputS)
   Test.assertEqual("reflectUtf8String preserved the string", outputS, inputS)
 
-  // TODO readBuffer not a method?
-  // let inputB = new Uint8Array([1, 2, 3, 4, 5]).buffer
-  // let outputB = Test.call("reflectByteBuffer", inputB).readBuffer()
-  //Test.assertEqual("reflectByteBuffer preserved the buffer", outputB.byteLength, inputB.byteLength)
+  let inputB = (new TextEncoder()).encode(KitchenSink.aString).buffer
+  let outputBs = Test.call("reflectByteBuffer", inputB)
+  // @ts-ignore TODO fix this when new xtp-test-js is pushed
+  let outputB = outputBs.readBytes()
+
+  // TODO compare the bytes
+  Test.assertEqual("reflectByteBuffer preserved the buffer length", outputB.byteLength, inputB.byteLength)
 
   return 0;
 }
