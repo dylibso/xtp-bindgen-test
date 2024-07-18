@@ -13,6 +13,36 @@ exports:
       $ref: "#/schemas/KitchenSinkObject"
     output:
       $ref: "#/schemas/KitchenSinkObject"
+  - name: reflectUtf8String
+    description: |
+      This function takes a string and returns it.
+      Should come out the same way it came in.
+    codeSamples:
+      - lang: typescript
+        source: |
+          return reflectUtf8StringHost(input)
+    input:
+      type: string
+      description: The input string
+      contentType: text/plain; charset=utf-8
+    output:
+      type: string
+      description: The output string
+      contentType: text/plain; charset=utf-8
+  - name: reflectByteBuffer
+    description: |
+      This function takes a byte buffer and returns it.
+      Should come out the same way it came in.
+    codeSamples:
+      - lang: typescript
+        source: |
+          return reflectByteBufferHost(input)
+    input:
+      type: buffer
+      description: The input byte buffer
+    output:
+      type: buffer
+      description: The output byte buffer
 imports:
   - name: reflectJsonObjectHost
     description: |
@@ -23,6 +53,28 @@ imports:
       $ref: "#/schemas/KitchenSinkObject"
     output:
       $ref: "#/schemas/KitchenSinkObject"
+  - name: reflectUtf8StringHost
+    description: |
+      This function takes a string and returns it.
+      Should come out the same way it came in. Same as export.
+    input:
+      type: string
+      description: The input string
+      contentType: text/plain; charset=utf-8
+    output:
+      type: string
+      description: The output string
+      contentType: text/plain; charset=utf-8
+  - name: reflectByteBufferHost
+    description: |
+      This function takes a bugger and returns it.
+      Should come out the same way it came in. Same as export.
+    input:
+      type: buffer
+      description: The input byte buffer
+    output:
+      type: buffer
+      description: The output byte buffer
 schemas:
   - name: EmbeddedObject
     description: An embedded object, has some arrays too
