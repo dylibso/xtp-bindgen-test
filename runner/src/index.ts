@@ -21,8 +21,8 @@ const KitchenSink = {
 
 export function test() {
   let input = JSON.stringify(KitchenSink)
-  let output = JSON.parse(Test.callString("reflectObject", input))
+  let output = JSON.parse(Test.callString("reflectJsonObject", input))
   // assuming if we re-stringify them here the formatting should be the same
-  Test.assertEqual("reflectObject preserved the KitchenSink", JSON.stringify(output), JSON.stringify(KitchenSink))
+  Test.assertEqual("reflectJsonObject preserved the KitchenSink", JSON.stringify(output), JSON.stringify(KitchenSink))
   return 0;
 }

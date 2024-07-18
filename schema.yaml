@@ -1,6 +1,6 @@
 version: v1-draft
 exports:
-  - name: reflectObject
+  - name: reflectJsonObject
     description: |
       This function takes a KitchenSinkObject and returns a KitchenSinkObject.
       It should come out the same way it came in.
@@ -8,13 +8,13 @@ exports:
       - lang: typescript
         source: |
           // pass this through the host function and return it back
-          return reflectObjectHost(input)
+          return reflectJsonObjectHost(input)
     input:
       $ref: "#/schemas/KitchenSinkObject"
     output:
       $ref: "#/schemas/KitchenSinkObject"
 imports:
-  - name: reflectObjectHost
+  - name: reflectJsonObjectHost
     description: |
       This function takes a KitchenSinkObject and returns a KitchenSinkObject.
       It should come out the same way it came in. It's the same as the export.
