@@ -71,7 +71,7 @@ schemas:
       - anEnum
       - anEmbeddedObject
       - anEmbeddedObjectArray
-      #- anUntypedObject
+      - anUntypedObject
     properties:
       - name: anOptionalString
         type: string
@@ -93,10 +93,9 @@ schemas:
       - name: aBool
         type: boolean
         description: A Boolean
-      # TODO put back after bug fix
-      # - name: anUntypedObject
-      #   type: object
-      #   description: An untyped object
+      - name: anUntypedObject
+        type: object
+        description: An untyped object
       - name: anEnum
         description: A string enum (prop comment)
         $ref: "#/schemas/AStringEnum"

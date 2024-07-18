@@ -13,7 +13,7 @@ const KitchenSink = {
   aFloat: 3.14,
   aDouble: 3.141592653589793238462643383279502884197,
   aBool: true,
-  //anUntypedObject: { hello: 'world' }, TODO uncomment after bug fix
+  anUntypedObject: { hello: 'world' },
   anEnum: 'option1',
   anEmbeddedObject: EmbeddedObject,
   anEmbeddedObjectArray: [EmbeddedObject, EmbeddedObject]
