@@ -21,8 +21,21 @@ const KitchenSink = {
 
 export function test() {
   let input = JSON.stringify(KitchenSink)
-  let output = JSON.parse(Test.callString("reflectObject", input))
+  let output = JSON.parse(Test.callString("reflectJsonObject", input))
   // assuming if we re-stringify them here the formatting should be the same
-  Test.assertEqual("reflectObject preserved the KitchenSink", JSON.stringify(output), JSON.stringify(KitchenSink))
+  Test.assertEqual("reflectJsonObject preserved the KitchenSink JSON object", JSON.stringify(output), JSON.stringify(KitchenSink))
+
+  let inputS = KitchenSink.aString
+  let outputS = Test.callString("reflectUtf8String", inputS)
+  Test.assertEqual("reflectUtf8String preserved the string", outputS, inputS)
+
+  let inputB = (new TextEncoder()).encode(KitchenSink.aString).buffer
+  let outputBs = Test.call("reflectByteBuffer", inputB)
+  // @ts-ignore TODO fix this when new xtp-test-js is pushed
+  let outputB = outputBs.readBytes()
+
+  // TODO compare the bytes
+  Test.assertEqual("reflectByteBuffer preserved the buffer length", outputB.byteLength, inputB.byteLength)
+
   return 0;
 }
