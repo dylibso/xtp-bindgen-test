@@ -5,7 +5,7 @@ const EmbeddedObject = {
   aStringArray: ["Hello", "🌍", "World!"],
   anEnumArray: ["option1", "option2", "option3"],
   anIntArray: [1, 2, 3],
-  aDate: "2024-07-23T16:03:34.0000Z",
+  aDate: "2024-07-23T16:03:34.000Z",
 };
 
 const KitchenSink = {
@@ -19,7 +19,7 @@ const KitchenSink = {
   anEnum: "option1",
   anEmbeddedObject: EmbeddedObject,
   anEmbeddedObjectArray: [EmbeddedObject, EmbeddedObject],
-  aDate: "2024-07-23T16:03:34.0000Z",
+  aDate: "2024-07-23T16:03:34.000Z",
 };
 
 export function test() {
