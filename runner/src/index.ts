@@ -42,7 +42,6 @@ export function test() {
 
   let inputB = (new TextEncoder()).encode(KitchenSink.aString).buffer;
   let outputBs = Test.call("reflectByteBuffer", inputB);
-  // @ts-ignore TODO fix this when new xtp-test-js is pushed
   let outputB = outputBs.readBytes();
 
   // TODO compare the bytes
