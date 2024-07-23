@@ -83,6 +83,7 @@ schemas:
       - anEnumArray
       - aStringArray
       - anIntArray
+      - aDate
     properties:
       - name: aBoolArray
         description: an array of bools
@@ -104,6 +105,10 @@ schemas:
         type: array
         items:
           type: integer
+      - name: aDate
+        description: a date
+        type: string
+        format: date-time
   - name: AStringEnum
     description: A string enum
     type: string
@@ -124,6 +129,7 @@ schemas:
       - anEmbeddedObject
       - anEmbeddedObjectArray
       - anUntypedObject
+      - aDate
     properties:
       - name: anOptionalString
         type: string
@@ -159,3 +165,7 @@ schemas:
         type: array
         items:
           $ref: "#/schemas/EmbeddedObject"
+      - name: aDate
+        description: a date
+        type: string
+        format: date-time
