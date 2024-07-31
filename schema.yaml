@@ -16,7 +16,7 @@ exports:
             return KitchenSinkObject{}, err
           }
 
-	        return *reflect, err
+          return *reflect, err
     input:
       $ref: "#/schemas/KitchenSinkObject"
     output:
