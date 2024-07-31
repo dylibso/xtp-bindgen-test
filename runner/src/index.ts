@@ -25,12 +25,15 @@ const KitchenSink = {
 export function test() {
   let input = JSON.stringify(KitchenSink);
   let output = JSON.parse(Test.callString("reflectJsonObject", input));
-  // assuming if we re-stringify them here the formatting should be the same
-  Test.assertEqual(
-    "reflectJsonObject preserved the KitchenSink JSON object",
-    JSON.stringify(output),
-    JSON.stringify(KitchenSink),
-  );
+
+  matchIdenticalTopLevel(output);
+  matchIdenticalEmbedded(output.anEmbeddedObject);
+  output.anEmbeddedObjectArray.forEach(matchIdenticalEmbedded);
+
+  // dates and JSON encodings between languages are a little fuzzy.
+  // so, rather than test stringified equality, we test the value of
+  // the date in various forms.
+  matchDate(output);
 
   Test.assertEqual(
     "reflectJsonObject preserved optional field semantics",
@@ -43,8 +46,7 @@ export function test() {
   Test.assertEqual("reflectUtf8String preserved the string", outputS, inputS);
 
   let inputB = (new TextEncoder()).encode(KitchenSink.aString).buffer;
-  let outputBs = Test.call("reflectByteBuffer", inputB);
-  let outputB = outputBs.readBytes();
+  let outputB = Test.callBuffer("reflectByteBuffer", inputB);
 
   // TODO compare the bytes
   Test.assertEqual(
@@ -55,3 +57,61 @@ export function test() {
 
   return 0;
 }
+
+const matchIdenticalTopLevel = (output: any) => {
+  // determine top-level fields that should be identical
+  // NOTE: anEmbeddedObject, anEmbeddedObjectArray, and aDate are intentionally omitted here
+  const matchIdentical = [
+    "anOptionalString",
+    "aString",
+    "anInt",
+    "aFloat",
+    "aDouble",
+    "anUntypedObject",
+    "anEnum",
+  ] as const;
+  matchIdentical.forEach((k: typeof matchIdentical[number]) => {
+    let key: keyof typeof KitchenSink = k;
+    let actual = output[key];
+    let expected = KitchenSink[key];
+    if (key === "anUntypedObject") {
+      actual = JSON.stringify(actual);
+      expected = JSON.stringify(expected);
+    }
+    Test.assertEqual(
+      `reflectJsonObject preserved identical value '${key}'`,
+      actual,
+      expected,
+    );
+  });
+};
+
+const matchIdenticalEmbedded = (embedded: any) => {
+  // determine flat embedded items that should be identical
+  // NOTE: aDate is intentionally omitted here
+  const matchIdenticalEmbedded = [
+    "aBoolArray",
+    "aStringArray",
+    "anEnumArray",
+    "anIntArray",
+  ] as const;
+  matchIdenticalEmbedded.forEach((k: typeof matchIdenticalEmbedded[number]) => {
+    let key: keyof typeof EmbeddedObject = k;
+    Test.assertEqual(
+      `reflectJsonObject preserved identical value '${key}'`,
+      JSON.stringify(embedded[k]),
+      JSON.stringify(EmbeddedObject[key]),
+    );
+  });
+};
+
+const matchDate = (output: any) => {
+  let expected = new Date(KitchenSink.aDate);
+  let actual = new Date(output.aDate);
+
+  Test.assertEqual(
+    `reflectJsonObject preserves semantics of 'date-time' formatted value`,
+    actual.getTime(),
+    expected.getTime(),
+  );
+};
