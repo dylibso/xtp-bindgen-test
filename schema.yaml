@@ -11,7 +11,12 @@ exports:
           return reflectJsonObjectHost(input)
       - lang: go
         source: |-
-          return input, nil
+          reflect, err := ReflectJsonObjectHost(input)
+          if err != nil {
+            return KitchenSinkObject{}, err
+          }
+
+	        return *reflect, err
     input:
       $ref: "#/schemas/KitchenSinkObject"
     output:
@@ -26,7 +31,12 @@ exports:
           return reflectUtf8StringHost(input)
       - lang: go
         source: |-
-          return input, nil
+          reflect, err := ReflectUtf8StringHost(input)
+          if err != nil {
+            return "", err
+          }
+
+          return *reflect, nil
     input:
       type: string
       description: The input string
@@ -45,7 +55,12 @@ exports:
           return reflectByteBufferHost(input)
       - lang: go
         source: |-
-          return input, nil
+          reflect, err := ReflectByteBufferHost(input)
+          if err != nil {
+            return nil, err
+          }
+
+          return reflect, nil
     input:
       type: buffer
       description: The input byte buffer
