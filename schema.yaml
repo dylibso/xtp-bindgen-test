@@ -9,6 +9,14 @@ exports:
         source: |
           // pass this through the host function and return it back
           return reflectJsonObjectHost(input)
+      - lang: go
+        source: |-
+          reflect, err := ReflectJsonObjectHost(input)
+          if err != nil {
+            return KitchenSinkObject{}, err
+          }
+
+          return *reflect, err
     input:
       $ref: "#/schemas/KitchenSinkObject"
     output:
@@ -21,6 +29,14 @@ exports:
       - lang: typescript
         source: |
           return reflectUtf8StringHost(input)
+      - lang: go
+        source: |-
+          reflect, err := ReflectUtf8StringHost(input)
+          if err != nil {
+            return "", err
+          }
+
+          return *reflect, nil
     input:
       type: string
       description: The input string
@@ -37,6 +53,14 @@ exports:
       - lang: typescript
         source: |
           return reflectByteBufferHost(input)
+      - lang: go
+        source: |-
+          reflect, err := ReflectByteBufferHost(input)
+          if err != nil {
+            return nil, err
+          }
+
+          return reflect, nil
     input:
       type: buffer
       description: The input byte buffer
@@ -77,6 +101,7 @@ imports:
       description: The output byte buffer
 schemas:
   - name: EmbeddedObject
+    contentType: application/json
     description: An embedded object, has some arrays too
     required:
       - aBoolArray
