@@ -18,8 +18,10 @@ exports:
 
         return *reflect, err
     input:
+      contentType: application/json
       $ref: "#/components/schemas/KitchenSinkObject"
     output:
+      contentType: application/json
       $ref: "#/components/schemas/KitchenSinkObject"
   reflectUtf8String:
     description: |
@@ -62,9 +64,11 @@ exports:
 
         return reflect, nil
     input:
+      contentType: application/x-binary
       type: buffer
       description: The input byte buffer
     output:
+      contentType: application/x-binary
       type: buffer
       description: The output byte buffer
 imports:
@@ -74,8 +78,10 @@ imports:
       It should come out the same way it came in. It's the same as the export.
       But the export should call this.
     input:
+      contentType: application/json
       $ref: "#/components/schemas/KitchenSinkObject"
     output:
+      contentType: application/json
       $ref: "#/components/schemas/KitchenSinkObject"
   reflectUtf8StringHost:
     description: |
@@ -94,15 +100,16 @@ imports:
       This function takes a bugger and returns it.
       Should come out the same way it came in. Same as export.
     input:
+      contentType: application/x-binary
       type: buffer
       description: The input byte buffer
     output:
+      contentType: application/x-binary
       type: buffer
       description: The output byte buffer
 components:
   schemas:
     EmbeddedObject:
-      contentType: application/json
       description: An embedded object, has some arrays too
       properties:
         aBoolArray:
@@ -137,7 +144,6 @@ components:
       - option2
       - option3
     KitchenSinkObject:
-      contentType: application/json
       description: A json object with every type of property
       properties:
         anOptionalString:
