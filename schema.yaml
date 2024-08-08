@@ -1,42 +1,44 @@
 version: v1-draft
 exports:
-  - name: reflectJsonObject
+  reflectJsonObject:
     description: |
       This function takes a KitchenSinkObject and returns a KitchenSinkObject.
       It should come out the same way it came in.
     codeSamples:
-      - lang: typescript
-        source: |
-          // pass this through the host function and return it back
-          return reflectJsonObjectHost(input)
-      - lang: go
-        source: |-
-          reflect, err := ReflectJsonObjectHost(input)
-          if err != nil {
-            return KitchenSinkObject{}, err
-          }
+    - lang: typescript
+      source: |
+        // pass this through the host function and return it back
+        return reflectJsonObjectHost(input)
+    - lang: go
+      source: |-
+        reflect, err := ReflectJsonObjectHost(input)
+        if err != nil {
+          return KitchenSinkObject{}, err
+        }
 
-          return *reflect, err
+        return *reflect, err
     input:
-      $ref: "#/schemas/KitchenSinkObject"
+      contentType: application/json
+      $ref: "#/components/schemas/KitchenSinkObject"
     output:
-      $ref: "#/schemas/KitchenSinkObject"
-  - name: reflectUtf8String
+      contentType: application/json
+      $ref: "#/components/schemas/KitchenSinkObject"
+  reflectUtf8String:
     description: |
       This function takes a string and returns it.
       Should come out the same way it came in.
     codeSamples:
-      - lang: typescript
-        source: |
-          return reflectUtf8StringHost(input)
-      - lang: go
-        source: |-
-          reflect, err := ReflectUtf8StringHost(input)
-          if err != nil {
-            return "", err
-          }
+    - lang: typescript
+      source: |
+        return reflectUtf8StringHost(input)
+    - lang: go
+      source: |-
+        reflect, err := ReflectUtf8StringHost(input)
+        if err != nil {
+          return "", err
+        }
 
-          return *reflect, nil
+        return *reflect, nil
     input:
       type: string
       description: The input string
@@ -45,39 +47,43 @@ exports:
       type: string
       description: The output string
       contentType: text/plain; charset=utf-8
-  - name: reflectByteBuffer
+  reflectByteBuffer:
     description: |
       This function takes a byte buffer and returns it.
       Should come out the same way it came in.
     codeSamples:
-      - lang: typescript
-        source: |
-          return reflectByteBufferHost(input)
-      - lang: go
-        source: |-
-          reflect, err := ReflectByteBufferHost(input)
-          if err != nil {
-            return nil, err
-          }
+    - lang: typescript
+      source: |
+        return reflectByteBufferHost(input)
+    - lang: go
+      source: |-
+        reflect, err := ReflectByteBufferHost(input)
+        if err != nil {
+          return nil, err
+        }
 
-          return reflect, nil
+        return reflect, nil
     input:
+      contentType: application/x-binary
       type: buffer
       description: The input byte buffer
     output:
+      contentType: application/x-binary
       type: buffer
       description: The output byte buffer
 imports:
-  - name: reflectJsonObjectHost
+  reflectJsonObjectHost:
     description: |
       This function takes a KitchenSinkObject and returns a KitchenSinkObject.
       It should come out the same way it came in. It's the same as the export.
       But the export should call this.
     input:
-      $ref: "#/schemas/KitchenSinkObject"
+      contentType: application/json
+      $ref: "#/components/schemas/KitchenSinkObject"
     output:
-      $ref: "#/schemas/KitchenSinkObject"
-  - name: reflectUtf8StringHost
+      contentType: application/json
+      $ref: "#/components/schemas/KitchenSinkObject"
+  reflectUtf8StringHost:
     description: |
       This function takes a string and returns it.
       Should come out the same way it came in. Same as export.
@@ -89,108 +95,93 @@ imports:
       type: string
       description: The output string
       contentType: text/plain; charset=utf-8
-  - name: reflectByteBufferHost
+  reflectByteBufferHost:
     description: |
       This function takes a bugger and returns it.
       Should come out the same way it came in. Same as export.
     input:
+      contentType: application/x-binary
       type: buffer
       description: The input byte buffer
     output:
+      contentType: application/x-binary
       type: buffer
       description: The output byte buffer
-schemas:
-  - name: EmbeddedObject
-    contentType: application/json
-    description: An embedded object, has some arrays too
-    required:
-      - aBoolArray
-      - anEnumArray
-      - aStringArray
-      - anIntArray
-      - aDate
-    properties:
-      - name: aBoolArray
-        description: an array of bools
-        type: array
-        items:
-          type: boolean
-      - name: aStringArray
-        description: an array of strings
-        type: array
-        items:
+components:
+  schemas:
+    EmbeddedObject:
+      description: An embedded object, has some arrays too
+      properties:
+        aBoolArray:
+          description: an array of bools
+          type: array
+          items:
+            type: boolean
+        aStringArray:
+          description: an array of strings
+          type: array
+          items:
+            type: string
+        anEnumArray:
+          description: an array of enums
+          type: array
+          items:
+            $ref: "#/components/schemas/AStringEnum"
+        anIntArray:
+          description: an array of enums
+          type: array
+          items:
+            type: integer
+        aDate:
+          description: a date
           type: string
-      - name: anEnumArray
-        description: an array of enums
-        type: array
-        items:
-          $ref: "#/schemas/AStringEnum"
-      - name: anIntArray
-        description: an array of enums
-        type: array
-        items:
-          type: integer
-      - name: aDate
-        description: a date
-        type: string
-        format: date-time
-  - name: AStringEnum
-    description: A string enum
-    type: string
-    enum:
+          format: date-time
+    AStringEnum:
+      description: A string enum
+      type: string
+      enum:
       - option1
       - option2
       - option3
-  - name: KitchenSinkObject
-    contentType: application/json
-    description: A json object with every type of property
-    required:
-      - aString
-      - anInt
-      - aFloat
-      - aDouble
-      - aBool
-      - anEnum
-      - anEmbeddedObject
-      - anEmbeddedObjectArray
-      - anUntypedObject
-      - aDate
-    properties:
-      - name: anOptionalString
-        type: string
-        description: A string but not required
-      - name: aString
-        type: string
-        description: A String
-      - name: anInt
-        type: integer
-        description: An Integer
-      - name: aFloat
-        type: number
-        format: float
-        description: A Float
-      - name: aDouble
-        type: number
-        format: double
-        description: A Double
-      - name: aBool
-        type: boolean
-        description: A Boolean
-      - name: anUntypedObject
-        type: object
-        description: An untyped object
-      - name: anEnum
-        description: A string enum (prop comment)
-        $ref: "#/schemas/AStringEnum"
-      - name: anEmbeddedObject
-        description: A embedded object array(prop comment)
-        $ref: "#/schemas/EmbeddedObject"
-      - name: anEmbeddedObjectArray
-        description: A embedded object array (prop comment)
-        type: array
-        items:
-          $ref: "#/schemas/EmbeddedObject"
-      - name: aDate
-        description: a date
-        type: string
-        format: date-time
+    KitchenSinkObject:
+      description: A json object with every type of property
+      properties:
+        anOptionalString:
+          type: string
+          description: A string but not required
+          nullable: true
+        aString:
+          type: string
+          description: A String
+        anInt:
+          type: integer
+          description: An Integer
+        aFloat:
+          type: number
+          format: float
+          description: A Float
+        aDouble:
+          type: number
+          format: double
+          description: A Double
+        aBool:
+          type: boolean
+          description: A Boolean
+        anUntypedObject:
+          type: object
+          description: An untyped object
+        anEnum:
+          description: A string enum (prop comment)
+          $ref: "#/components/schemas/AStringEnum"
+        anEmbeddedObject:
+          description: A embedded object array(prop comment)
+          $ref: "#/components/schemas/EmbeddedObject"
+        anEmbeddedObjectArray:
+          description: A embedded object array (prop comment)
+          type: array
+          items:
+            $ref: "#/components/schemas/EmbeddedObject"
+        aDate:
+          description: a date
+          type: string
+          format: date-time
