@@ -17,6 +17,9 @@ exports:
         }
 
         return *reflect, err
+    - lang: csharp
+      source: |-
+        return Host.ReflectJsonObjectHost(input);
     input:
       contentType: application/json
       $ref: "#/components/schemas/KitchenSinkObject"
@@ -39,6 +42,9 @@ exports:
         }
 
         return *reflect, nil
+    - lang: csharp
+      source: |-
+        return Host.ReflectUtf8StringHost(input);
     input:
       type: string
       description: The input string
@@ -63,6 +69,9 @@ exports:
         }
 
         return reflect, nil
+    - lang: csharp
+      source: |-
+        return Host.ReflectByteBufferHost(input);
     input:
       contentType: application/x-binary
       type: buffer
