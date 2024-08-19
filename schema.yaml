@@ -20,6 +20,9 @@ exports:
     - lang: csharp
       source: |-
         return Host.ReflectJsonObjectHost(input);
+    - lang: zig
+      source: |
+        return Host.reflectJsonObjectHost(input);
     input:
       contentType: application/json
       $ref: "#/components/schemas/KitchenSinkObject"
@@ -45,6 +48,9 @@ exports:
     - lang: csharp
       source: |-
         return Host.ReflectUtf8StringHost(input);
+    - lang: zig
+      source: |
+        return Host.reflectUtf8StringHost(input);
     input:
       type: string
       description: The input string
@@ -72,6 +78,9 @@ exports:
     - lang: csharp
       source: |-
         return Host.ReflectByteBufferHost(input);
+    - lang: zig
+      source: |
+        return Host.reflectByteBufferHost(input);
     input:
       contentType: application/x-binary
       type: buffer
