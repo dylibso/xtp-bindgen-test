@@ -89,6 +89,34 @@ exports:
       contentType: application/x-binary
       type: buffer
       description: The output byte buffer
+
+  noInputWithOutput:
+    description: a function that takes no input, but returns an output
+    output:
+      contentType: text/plain; charset=utf-8
+      type: string
+    codeSamples:
+    - lang: zig
+      source: |-
+        return Host.noInputWithOutputHost();
+
+  withInputNoOutput:
+    description: a function that takes input, but returns no output
+    input:
+      contentType: application/json
+      type: number
+    codeSamples:
+    - lang: zig
+      source: |-
+        return Host.withInputNoOutputHost(input);
+
+  noInputNoOutput:
+    description: a function that takes no input, and returns no output
+    codeSamples:
+    - lang: zig
+      source: |-
+        return Host.noInputNoOutputHost();
+
 imports:
   reflectJsonObjectHost:
     description: |
@@ -125,6 +153,22 @@ imports:
       contentType: application/x-binary
       type: buffer
       description: The output byte buffer
+
+  noInputWithOutputHost:
+    description: a function that takes no input, but returns an output
+    output:
+      contentType: text/plain; charset=utf-8
+      type: string
+
+  withInputNoOutputHost:
+    description: a function that takes input, but returns no output
+    input:
+      contentType: application/json
+      type: number
+
+  noInputNoOutputHost:
+    description: a function that takes no input, and returns no output
+
 components:
   schemas:
     EmbeddedObject:
