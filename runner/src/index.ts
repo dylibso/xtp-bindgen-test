@@ -55,6 +55,45 @@ export function test() {
     inputB.byteLength,
   );
 
+  // should call a the `noInputWithOutputHost` host function passing it
+  // a string "noInputWithOutputHost" which it should return
+  let noInputWithOutputOutput = Test.callString(
+    "noInputWithOutput",
+    "",
+  );
+  Test.assertEqual(
+    "noInputWithOutput returns expected output",
+    noInputWithOutputOutput,
+    "noInputWithOutputHost",
+  );
+
+  // should call the `withInputNoOutputHost` host function passing it
+  // JSON-encoded number 42, which the host function checks for and panics
+  // if it is not that JSON value
+  try {
+    let withInputNoOutputOutput = Test.call(
+      "withInputNoOutput",
+      JSON.stringify(42),
+    );
+    Test.assertEqual(
+      "withInputNoOutput runs without panic",
+      withInputNoOutputOutput,
+      undefined,
+    );
+  } catch (e: any) {
+    Test.assert(
+      "withInputNoOutput runs without panic",
+      false,
+      `host function (withInputNoOutputHost) panic with unexpected argument, must be JSON-encoded 42: ${e.message}`,
+    );
+  }
+
+  Test.assertEqual(
+    "noInputNoOutput is called successfully",
+    Test.call("noInputNoOutput", ""),
+    undefined,
+  );
+
   return 0;
 }
 
