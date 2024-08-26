@@ -25,7 +25,8 @@ const KitchenSink = {
 export function test() {
   Test.group("schema v1-draft encoding types", () => {
     let input = JSON.stringify(KitchenSink);
-    let output = JSON.parse(Test.callString("reflectJsonObject", input));
+    let output: typeof KitchenSink = Test.call("reflectJsonObject", input)
+      .json();
 
     matchIdenticalTopLevel(output);
     matchIdenticalEmbedded(output.anEmbeddedObject);
@@ -43,11 +44,11 @@ export function test() {
     );
 
     let inputS = KitchenSink.aString;
-    let outputS = Test.callString("reflectUtf8String", inputS);
+    let outputS = Test.call("reflectUtf8String", inputS).text();
     Test.assertEqual("reflectUtf8String preserved the string", outputS, inputS);
 
     let inputB = (new TextEncoder()).encode(KitchenSink.aString).buffer;
-    let outputB = Test.callBuffer("reflectByteBuffer", inputB);
+    let outputB = Test.call("reflectByteBuffer", inputB).arrayBuffer();
 
     // TODO compare the bytes
     Test.assertEqual(
@@ -60,10 +61,10 @@ export function test() {
   Test.group("check signature and type variations", () => {
     // should call a the `noInputWithOutputHost` host function passing it
     // a string "noInputWithOutputHost" which it should return
-    let noInputWithOutputOutput = Test.callString(
+    let noInputWithOutputOutput = Test.call(
       "noInputWithOutput",
       "",
-    );
+    ).text();
     Test.assertEqual(
       "noInputWithOutput returns expected output",
       noInputWithOutputOutput,
@@ -78,10 +79,10 @@ export function test() {
         "withInputNoOutput",
         JSON.stringify(42),
       );
-      Test.assertEqual(
-        "withInputNoOutput runs without panic",
-        withInputNoOutputOutput,
-        undefined,
+      Test.assert(
+        "withInputNoOutput runs and returns no output",
+        withInputNoOutputOutput.isEmpty(),
+        `expected empty output, got: ${withInputNoOutputOutput.text()}`,
       );
     } catch (e: any) {
       Test.assert(
@@ -91,10 +92,11 @@ export function test() {
       );
     }
 
-    Test.assertEqual(
+    const noInputNoOutput = Test.call("noInputNoOutput", "");
+    Test.assert(
       "noInputNoOutput is called successfully",
-      Test.call("noInputNoOutput", ""),
-      undefined,
+      noInputNoOutput.isEmpty(),
+      `expected empty output, got: ${noInputNoOutput.text()}`,
     );
   });
 
