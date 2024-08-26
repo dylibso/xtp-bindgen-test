@@ -63,7 +63,7 @@ export function test() {
     // a string "noInputWithOutputHost" which it should return
     let noInputWithOutputOutput = Test.call(
       "noInputWithOutput",
-      "",
+      undefined,
     ).text();
     Test.assertEqual(
       "noInputWithOutput returns expected output",
@@ -92,7 +92,7 @@ export function test() {
       );
     }
 
-    const noInputNoOutput = Test.call("noInputNoOutput", "");
+    const noInputNoOutput = Test.call("noInputNoOutput", undefined);
     Test.assert(
       "noInputNoOutput is called successfully",
       noInputNoOutput.isEmpty(),
