@@ -41,4 +41,22 @@ func reflectByteBufferHost(kPtr uint64) uint64 {
 	return kRet.Offset()
 }
 
+//go:export noInputWithOutputHost
+func noInputWithOutputHost() uint64 {
+	mem := pdk.AllocateString("noInputWithOutputHost")
+	return mem.Offset()
+}
+
+//go:export withInputNoOutputHost
+func withInputNoOutputHost(ptr uint64) {
+	mem := pdk.FindMemory(ptr)
+	data := string(mem.ReadBytes())
+	if data != "42" { // JSON-encoded string value from the caller
+		panic("failed to read expected value")
+	}
+}
+
+//go:export noInputNoOutputHost
+func noInputNoOutputHost() {}
+
 func main() {}

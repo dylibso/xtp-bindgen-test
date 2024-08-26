@@ -5,24 +5,24 @@ exports:
       This function takes a KitchenSinkObject and returns a KitchenSinkObject.
       It should come out the same way it came in.
     codeSamples:
-    - lang: typescript
-      source: |
-        // pass this through the host function and return it back
-        return reflectJsonObjectHost(input)
-    - lang: go
-      source: |-
-        reflect, err := ReflectJsonObjectHost(input)
-        if err != nil {
-          return KitchenSinkObject{}, err
-        }
+      - lang: typescript
+        source: |
+          // pass this through the host function and return it back
+          return reflectJsonObjectHost(input)
+      - lang: go
+        source: |-
+          reflect, err := ReflectJsonObjectHost(input)
+          if err != nil {
+            return input, err
+          }
 
-        return *reflect, err
-    - lang: csharp
-      source: |-
-        return Host.ReflectJsonObjectHost(input);
-    - lang: zig
-      source: |
-        return Host.reflectJsonObjectHost(input);
+          return *reflect, err
+      - lang: csharp
+        source: |-
+          return Host.ReflectJsonObjectHost(input);
+      - lang: zig
+        source: |
+          return Host.reflectJsonObjectHost(input);
     input:
       contentType: application/json
       $ref: "#/components/schemas/KitchenSinkObject"
@@ -34,23 +34,23 @@ exports:
       This function takes a string and returns it.
       Should come out the same way it came in.
     codeSamples:
-    - lang: typescript
-      source: |
-        return reflectUtf8StringHost(input)
-    - lang: go
-      source: |-
-        reflect, err := ReflectUtf8StringHost(input)
-        if err != nil {
-          return "", err
-        }
+      - lang: typescript
+        source: |
+          return reflectUtf8StringHost(input)
+      - lang: go
+        source: |-
+          reflect, err := ReflectUtf8StringHost(input)
+          if err != nil {
+            return "", err
+          }
 
-        return *reflect, nil
-    - lang: csharp
-      source: |-
-        return Host.ReflectUtf8StringHost(input);
-    - lang: zig
-      source: |
-        return Host.reflectUtf8StringHost(input);
+          return *reflect, nil
+      - lang: csharp
+        source: |-
+          return Host.ReflectUtf8StringHost(input);
+      - lang: zig
+        source: |
+          return Host.reflectUtf8StringHost(input);
     input:
       type: string
       description: The input string
@@ -64,23 +64,23 @@ exports:
       This function takes a byte buffer and returns it.
       Should come out the same way it came in.
     codeSamples:
-    - lang: typescript
-      source: |
-        return reflectByteBufferHost(input)
-    - lang: go
-      source: |-
-        reflect, err := ReflectByteBufferHost(input)
-        if err != nil {
-          return nil, err
-        }
+      - lang: typescript
+        source: |
+          return reflectByteBufferHost(input)
+      - lang: go
+        source: |-
+          reflect, err := ReflectByteBufferHost(input)
+          if err != nil {
+            return nil, err
+          }
 
-        return reflect, nil
-    - lang: csharp
-      source: |-
-        return Host.ReflectByteBufferHost(input);
-    - lang: zig
-      source: |
-        return Host.reflectByteBufferHost(input);
+          return reflect, nil
+      - lang: csharp
+        source: |-
+          return Host.ReflectByteBufferHost(input);
+      - lang: zig
+        source: |
+          return Host.reflectByteBufferHost(input);
     input:
       contentType: application/x-binary
       type: buffer
@@ -89,6 +89,61 @@ exports:
       contentType: application/x-binary
       type: buffer
       description: The output byte buffer
+
+  noInputWithOutput:
+    description: a function that takes no input, but returns an output
+    output:
+      contentType: text/plain; charset=utf-8
+      type: string
+    codeSamples:
+      - lang: typescript
+        source: |
+          return noInputWithOutputHost();
+      - lang: zig
+        source: |-
+          return Host.noInputWithOutputHost();
+      - lang: go
+        source: |
+          output, err := NoInputWithOutputHost()
+          if err != nil {
+            return *output, err
+          }
+
+          return *output, nil
+
+  withInputNoOutput:
+    description: a function that takes input, but returns no output
+    input:
+      contentType: application/json
+      type: number
+    codeSamples:
+      - lang: typescript
+        source: |
+          return withInputNoOutputHost(input);
+      - lang: zig
+        source: |-
+          return Host.withInputNoOutputHost(input);
+      - lang: go
+        source: |
+          err := WithInputNoOutputHost(input)
+          if err != nil {
+            return err
+          }
+          return nil
+
+  noInputNoOutput:
+    description: a function that takes no input, and returns no output
+    codeSamples:
+      - lang: typescript
+        source: |-
+          noInputNoOutputHost();
+      - lang: zig
+        source: |-
+          return Host.noInputNoOutputHost();
+      - lang: go
+        source: |
+          return NoInputNoOutputHost()
+
 imports:
   reflectJsonObjectHost:
     description: |
@@ -125,6 +180,22 @@ imports:
       contentType: application/x-binary
       type: buffer
       description: The output byte buffer
+
+  noInputWithOutputHost:
+    description: a function that takes no input, but returns an output
+    output:
+      contentType: text/plain; charset=utf-8
+      type: string
+
+  withInputNoOutputHost:
+    description: a function that takes input, but returns no output
+    input:
+      contentType: application/json
+      type: number
+
+  noInputNoOutputHost:
+    description: a function that takes no input, and returns no output
+
 components:
   schemas:
     EmbeddedObject:
@@ -158,9 +229,9 @@ components:
       description: A string enum
       type: string
       enum:
-      - option1
-      - option2
-      - option3
+        - option1
+        - option2
+        - option3
     KitchenSinkObject:
       description: A json object with every type of property
       properties:

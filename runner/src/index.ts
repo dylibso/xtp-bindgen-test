@@ -23,37 +23,82 @@ const KitchenSink = {
 };
 
 export function test() {
-  let input = JSON.stringify(KitchenSink);
-  let output = JSON.parse(Test.callString("reflectJsonObject", input));
+  Test.group("schema v1-draft encoding types", () => {
+    let input = JSON.stringify(KitchenSink);
+    let output: typeof KitchenSink = Test.call("reflectJsonObject", input)
+      .json();
 
-  matchIdenticalTopLevel(output);
-  matchIdenticalEmbedded(output.anEmbeddedObject);
-  output.anEmbeddedObjectArray.forEach(matchIdenticalEmbedded);
+    matchIdenticalTopLevel(output);
+    matchIdenticalEmbedded(output.anEmbeddedObject);
+    output.anEmbeddedObjectArray.forEach(matchIdenticalEmbedded);
 
-  // dates and JSON encodings between languages are a little fuzzy.
-  // so, rather than test stringified equality, we test the value of
-  // the date in various forms.
-  matchDate(output);
+    // dates and JSON encodings between languages are a little fuzzy.
+    // so, rather than test stringified equality, we test the value of
+    // the date in various forms.
+    matchDate(output);
 
-  Test.assertEqual(
-    "reflectJsonObject preserved optional field semantics",
-    output.anOptionalString,
-    KitchenSink.anOptionalString,
-  );
+    Test.assertEqual(
+      "reflectJsonObject preserved optional field semantics",
+      output.anOptionalString,
+      KitchenSink.anOptionalString,
+    );
 
-  let inputS = KitchenSink.aString;
-  let outputS = Test.callString("reflectUtf8String", inputS);
-  Test.assertEqual("reflectUtf8String preserved the string", outputS, inputS);
+    let inputS = KitchenSink.aString;
+    let outputS = Test.call("reflectUtf8String", inputS).text();
+    Test.assertEqual("reflectUtf8String preserved the string", outputS, inputS);
 
-  let inputB = (new TextEncoder()).encode(KitchenSink.aString).buffer;
-  let outputB = Test.callBuffer("reflectByteBuffer", inputB);
+    let inputB = (new TextEncoder()).encode(KitchenSink.aString).buffer;
+    let outputB = Test.call("reflectByteBuffer", inputB).arrayBuffer();
 
-  // TODO compare the bytes
-  Test.assertEqual(
-    "reflectByteBuffer preserved the buffer length",
-    outputB.byteLength,
-    inputB.byteLength,
-  );
+    // TODO compare the bytes
+    Test.assertEqual(
+      "reflectByteBuffer preserved the buffer length",
+      outputB.byteLength,
+      inputB.byteLength,
+    );
+  });
+
+  Test.group("check signature and type variations", () => {
+    // should call a the `noInputWithOutputHost` host function passing it
+    // a string "noInputWithOutputHost" which it should return
+    let noInputWithOutputOutput = Test.call(
+      "noInputWithOutput",
+      undefined,
+    ).text();
+    Test.assertEqual(
+      "noInputWithOutput returns expected output",
+      noInputWithOutputOutput,
+      "noInputWithOutputHost",
+    );
+
+    // should call the `withInputNoOutputHost` host function passing it
+    // JSON-encoded number 42, which the host function checks for and panics
+    // if it is not that JSON value
+    try {
+      let withInputNoOutputOutput = Test.call(
+        "withInputNoOutput",
+        JSON.stringify(42),
+      );
+      Test.assert(
+        "withInputNoOutput runs and returns no output",
+        withInputNoOutputOutput.isEmpty(),
+        `expected empty output, got: ${withInputNoOutputOutput.text()}`,
+      );
+    } catch (e: any) {
+      Test.assert(
+        "withInputNoOutput runs without panic",
+        false,
+        `host function (withInputNoOutputHost) panic with unexpected argument, must be JSON-encoded 42: ${e.message}`,
+      );
+    }
+
+    const noInputNoOutput = Test.call("noInputNoOutput", undefined);
+    Test.assert(
+      "noInputNoOutput is called successfully",
+      noInputNoOutput.isEmpty(),
+      `expected empty output, got: ${noInputNoOutput.text()}`,
+    );
+  });
 
   return 0;
 }
