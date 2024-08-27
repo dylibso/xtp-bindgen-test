@@ -23,6 +23,9 @@ exports:
       - lang: zig
         source: |
           return Host.reflectJsonObjectHost(input);
+      - lang: rust
+        source: |
+          pdk::reflect_json_object_host(_input)
     input:
       contentType: application/json
       $ref: "#/components/schemas/KitchenSinkObject"
@@ -51,6 +54,9 @@ exports:
       - lang: zig
         source: |
           return Host.reflectUtf8StringHost(input);
+      - lang: rust
+        source: |
+          pdk::reflect_utf8_string_host(_input)
     input:
       type: string
       description: The input string
@@ -81,6 +87,9 @@ exports:
       - lang: zig
         source: |
           return Host.reflectByteBufferHost(input);
+      - lang: rust
+        source: |
+          pdk::reflect_byte_buffer_host(_input)
     input:
       contentType: application/x-binary
       type: buffer
@@ -110,6 +119,9 @@ exports:
           }
 
           return *output, nil
+      - lang: rust
+        source: |
+          pdk::no_input_with_output_host()
 
   withInputNoOutput:
     description: a function that takes input, but returns no output
@@ -130,6 +142,9 @@ exports:
             return err
           }
           return nil
+      - lang: rust
+        source: |
+          pdk::with_input_no_output_host(_input)
 
   noInputNoOutput:
     description: a function that takes no input, and returns no output
@@ -143,6 +158,9 @@ exports:
       - lang: go
         source: |
           return NoInputNoOutputHost()
+      - lang: rust
+        source: |
+          pdk::no_input_no_output_host()
 
 imports:
   reflectJsonObjectHost:
