@@ -26,6 +26,9 @@ exports:
       - lang: rust
         source: |
           pdk::reflect_json_object_host(_input)
+      - lang: c++
+        source: |
+          return pdk::reflectJsonObjectHost(std::move(input));
     input:
       contentType: application/json
       $ref: "#/components/schemas/KitchenSinkObject"
@@ -57,6 +60,9 @@ exports:
       - lang: rust
         source: |
           pdk::reflect_utf8_string_host(_input)
+      - lang: c++
+        source: |
+          return pdk::reflectUtf8StringHost(std::move(input));
     input:
       type: string
       description: The input string
@@ -90,6 +96,9 @@ exports:
       - lang: rust
         source: |
           pdk::reflect_byte_buffer_host(_input)
+      - lang: c++
+        source: |
+          return pdk::reflectByteBufferHost(std::move(input));
     input:
       contentType: application/x-binary
       type: buffer
@@ -122,6 +131,9 @@ exports:
       - lang: rust
         source: |
           pdk::no_input_with_output_host()
+      - lang: c++
+        source: |
+          return pdk::noInputWithOutputHost();
 
   withInputNoOutput:
     description: a function that takes input, but returns no output
@@ -145,6 +157,9 @@ exports:
       - lang: rust
         source: |
           pdk::with_input_no_output_host(_input)
+      - lang: c++
+        source: |
+          return pdk::withInputNoOutputHost(input);
 
   noInputNoOutput:
     description: a function that takes no input, and returns no output
@@ -161,6 +176,10 @@ exports:
       - lang: rust
         source: |
           pdk::no_input_no_output_host()
+      - lang: c++
+        source: |
+          pdk::noInputNoOutputHost();
+          return std::expected<void, pdk::Error>();
 
 imports:
   reflectJsonObjectHost:
