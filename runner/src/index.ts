@@ -8,6 +8,9 @@ const EmbeddedObject = {
   aDate: "2024-07-23T16:03:34.000Z",
 };
 
+const inputBufferString = "Hello 🌍 World!🌍";
+const expectedOutputBufferString = "Goodbye 🌍 World!🌍";
+
 const KitchenSink = {
   anOptionalString: null,
   aString: "🌍Hello 🌍 World!🌍",
@@ -20,6 +23,12 @@ const KitchenSink = {
   anEmbeddedObject: EmbeddedObject,
   anEmbeddedObjectArray: [EmbeddedObject, EmbeddedObject],
   aDate: "2024-07-23T16:03:34.000Z",
+  // the host is expected to convert `buffer` type properties to base64 strings (like the below),
+  // but the bindgen'd XTP PDKs will handle this automatically, decoding base64 back to
+  // the original buffer.
+  aBuffer: Host.arrayBufferToBase64(
+    new TextEncoder().encode(inputBufferString).buffer,
+  ),
 };
 
 export function test() {
@@ -55,6 +64,13 @@ export function test() {
       "reflectByteBuffer preserved the buffer length",
       outputB.byteLength,
       inputB.byteLength,
+    );
+
+    output = Test.call("helloToGoodbyeReplacement", input).json();
+    Test.assertEqual(
+      "helloToGoodbyeReplacement properly converted, replaced, and reconverted data",
+      new TextDecoder().decode(Host.base64ToArrayBuffer(output.aBuffer)),
+      expectedOutputBufferString,
     );
   });
 

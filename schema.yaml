@@ -161,6 +161,23 @@ exports:
       - lang: rust
         source: |
           pdk::no_input_no_output_host()
+  
+  helloToGoodbyeReplacement:
+    description: a function that should replace `Hello` with `Goodbye` within a byte buffer field on KitchenSinkObject
+    input:
+      contentType: application/json
+      $ref: "#/components/schemas/KitchenSinkObject"
+    output:
+      contentType: application/json
+      $ref: "#/components/schemas/KitchenSinkObject"
+    codeSamples:
+      - lang: go
+        source: |-
+          old := []byte("Hello")
+          new := []byte("Goodbye")
+          input.ABuffer = append(new, input.ABuffer[len(old):]...)
+
+          return input, nil
 
 imports:
   reflectJsonObjectHost:
@@ -292,3 +309,6 @@ components:
           description: a date
           type: string
           format: date-time
+        aBuffer:
+          description: a byte buffer
+          type: buffer
