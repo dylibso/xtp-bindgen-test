@@ -193,6 +193,11 @@ exports:
           buffer = buffer.Replace("Hello", "Goodbye");
           input.ABuffer = System.Text.Encoding.UTF8.GetBytes(buffer);
           return input;
+      - lang: rust
+        source: |-
+          let mut output = _input;
+          output.a_buffer = std::str::from_utf8(&output.a_buffer)?.replace("Hello", "Goodbye").as_bytes().to_vec();
+          Ok(output)
 
 imports:
   reflectJsonObjectHost:
