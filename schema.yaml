@@ -122,6 +122,9 @@ exports:
       - lang: rust
         source: |
           pdk::no_input_with_output_host()
+      - lang: csharp
+        source: |-
+          return Host.NoInputWithOutputHost();
 
   withInputNoOutput:
     description: a function that takes input, but returns no output
@@ -145,6 +148,9 @@ exports:
       - lang: rust
         source: |
           pdk::with_input_no_output_host(_input)
+      - lang: csharp
+        source: |-
+          Host.WithInputNoOutputHost(input);
 
   noInputNoOutput:
     description: a function that takes no input, and returns no output
@@ -161,6 +167,9 @@ exports:
       - lang: rust
         source: |
           pdk::no_input_no_output_host()
+      - lang: csharp
+        source: |-
+          Host.NoInputNoOutputHost();
   
   helloToGoodbyeReplacement:
     description: a function that should replace `Hello` with `Goodbye` within a byte buffer field on KitchenSinkObject
