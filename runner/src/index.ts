@@ -29,6 +29,7 @@ const KitchenSink = {
   aBuffer: Host.arrayBufferToBase64(
     new TextEncoder().encode(inputBufferString).buffer,
   ),
+  // aBuffer: "NzIsMTAxLDEwOCwxMDgsMTExLDMyLDI0MCwxNTksMTQwLDE0MSwzMiw4NywxMTEsMTE0LDEwOCwxMDAsMzMsMjQwLDE1OSwxNDAsMTQx",
 };
 
 export function test() {
@@ -66,12 +67,18 @@ export function test() {
       inputB.byteLength,
     );
 
-    output = Test.call("helloToGoodbyeReplacement", input).json();
-    Test.assertEqual(
-      "helloToGoodbyeReplacement properly converted, replaced, and reconverted data",
-      new TextDecoder().decode(Host.base64ToArrayBuffer(output.aBuffer)),
-      expectedOutputBufferString,
-    );
+    const name =
+      "helloToGoodbyeReplacement properly converted, replaced, and reconverted data";
+    try {
+      output = Test.call("helloToGoodbyeReplacement", input).json();
+      Test.assertEqual(
+        name,
+        new TextDecoder().decode(Host.base64ToArrayBuffer(output.aBuffer)),
+        expectedOutputBufferString,
+      );
+    } catch (e: any) {
+      Test.assert(name, false, e.message);
+    }
   });
 
   Test.group("check signature and type variations", () => {
