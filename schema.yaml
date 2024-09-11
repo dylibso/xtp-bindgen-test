@@ -178,6 +178,12 @@ exports:
           input.ABuffer = append(new, input.ABuffer[len(old):]...)
 
           return input, nil
+      - lang: csharp
+        source: |-
+          var buffer = System.Text.Encoding.UTF8.GetString(input.ABuffer);
+          buffer = buffer.Replace("Hello", "Goodbye");
+          input.ABuffer = System.Text.Encoding.UTF8.GetBytes(buffer);
+          return input;
 
 imports:
   reflectJsonObjectHost:
