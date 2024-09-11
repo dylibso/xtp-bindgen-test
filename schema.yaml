@@ -198,6 +198,18 @@ exports:
           let mut output = _input;
           output.a_buffer = std::str::from_utf8(&output.a_buffer)?.replace("Hello", "Goodbye").as_bytes().to_vec();
           Ok(output)
+      - lang: zig
+        source: |-
+          const std = @import("std");
+          var output = input;
+          const old = "Hello";
+          const new = "Goodbye";
+          var arr = std.ArrayList(u8).init(std.heap.wasm_allocator);
+
+          try arr.insertSlice(0, new);
+          try arr.insertSlice(new.len, input.aBuffer[old.len..]);
+          output.aBuffer = try arr.toOwnedSlice();
+          return output;
 
 imports:
   reflectJsonObjectHost:
