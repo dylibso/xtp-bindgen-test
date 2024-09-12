@@ -145,6 +145,9 @@ const matchIdenticalTopLevel = (output: any) => {
     if (key === "anUntypedObject") {
       actual = JSON.stringify(actual);
       expected = JSON.stringify(expected);
+    } else if (key === 'aFloat') {
+      actual = (new Float32Array([actual]))[0];
+      expected = (new Float32Array([expected as number]))[0];
     }
     Test.assertEqual(
       `reflectJsonObject preserved identical value '${key}'`,
