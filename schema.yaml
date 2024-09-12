@@ -229,6 +229,18 @@ exports:
           try arr.insertSlice(new.len, input.aBuffer[old.len..]);
           output.aBuffer = try arr.toOwnedSlice();
           return output;
+      - lang: c++
+        source: |-
+          std::string tomodify = std::string(
+              reinterpret_cast<char *>(input.aBuffer.data()), input.aBuffer.size());
+          const std::string search("Hello");
+          size_t pos = 0;
+          if ((pos = tomodify.find(search, pos)) != std::string::npos) {
+            tomodify.replace(pos, search.length(), "Goodbye");
+            const auto pString = reinterpret_cast<uint8_t *>(tomodify.data());
+            input.aBuffer = std::vector<uint8_t>(pString, pString + tomodify.size());
+          }
+          return std::make_unique<pdk::KitchenSinkObject>(std::move(input));
 
 imports:
   reflectJsonObjectHost:
