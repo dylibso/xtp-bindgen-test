@@ -131,6 +131,9 @@ exports:
       - lang: rust
         source: |
           pdk::no_input_with_output_host()
+      - lang: csharp
+        source: |-
+          return Host.NoInputWithOutputHost();
       - lang: c++
         source: |
           return pdk::noInputWithOutputHost();
@@ -157,6 +160,9 @@ exports:
       - lang: rust
         source: |
           pdk::with_input_no_output_host(_input)
+      - lang: csharp
+        source: |-
+          Host.WithInputNoOutputHost(input);
       - lang: c++
         source: |
           return pdk::withInputNoOutputHost(input);
@@ -176,10 +182,53 @@ exports:
       - lang: rust
         source: |
           pdk::no_input_no_output_host()
+      - lang: csharp
+        source: |-
+          Host.NoInputNoOutputHost();
       - lang: c++
         source: |
           pdk::noInputNoOutputHost();
           return std::expected<void, pdk::Error>();
+  
+  helloToGoodbyeReplacement:
+    description: a function that should replace `Hello` with `Goodbye` within a byte buffer field on KitchenSinkObject
+    input:
+      contentType: application/json
+      $ref: "#/components/schemas/KitchenSinkObject"
+    output:
+      contentType: application/json
+      $ref: "#/components/schemas/KitchenSinkObject"
+    codeSamples:
+      - lang: go
+        source: |-
+          old := []byte("Hello")
+          new := []byte("Goodbye")
+          input.ABuffer = append(new, input.ABuffer[len(old):]...)
+
+          return input, nil
+      - lang: csharp
+        source: |-
+          var buffer = System.Text.Encoding.UTF8.GetString(input.ABuffer);
+          buffer = buffer.Replace("Hello", "Goodbye");
+          input.ABuffer = System.Text.Encoding.UTF8.GetBytes(buffer);
+          return input;
+      - lang: rust
+        source: |-
+          let mut output = _input;
+          output.a_buffer = std::str::from_utf8(&output.a_buffer)?.replace("Hello", "Goodbye").as_bytes().to_vec();
+          Ok(output)
+      - lang: zig
+        source: |-
+          const std = @import("std");
+          var output = input;
+          const old = "Hello";
+          const new = "Goodbye";
+          var arr = std.ArrayList(u8).init(std.heap.wasm_allocator);
+
+          try arr.insertSlice(0, new);
+          try arr.insertSlice(new.len, input.aBuffer[old.len..]);
+          output.aBuffer = try arr.toOwnedSlice();
+          return output;
 
 imports:
   reflectJsonObjectHost:
@@ -311,3 +360,6 @@ components:
           description: a date
           type: string
           format: date-time
+        aBuffer:
+          description: a byte buffer
+          type: buffer
