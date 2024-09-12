@@ -137,6 +137,7 @@ const matchIdenticalTopLevel = (output: any) => {
     "aDouble",
     "anUntypedObject",
     "anEnum",
+    "aBuffer",
   ] as const;
   matchIdentical.forEach((k: typeof matchIdentical[number]) => {
     let key: keyof typeof KitchenSink = k;
