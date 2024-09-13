@@ -199,6 +199,18 @@ exports:
       contentType: application/json
       $ref: "#/components/schemas/KitchenSinkObject"
     codeSamples:
+      - lang: typescript
+        source: |-
+          const encoder = new TextEncoder()
+          const oldBytes = encoder.encode("Hello")
+          const newBytes = encoder.encode("Goodbye")
+          const bufferView = new Uint8Array(input.aBuffer)
+          const newBuffer = new ArrayBuffer(newBytes.length + bufferView.length - oldBytes.length)
+          const newBufferView = new Uint8Array(newBuffer)
+          newBufferView.set(newBytes, 0)
+          newBufferView.set(bufferView.subarray(oldBytes.length), newBytes.length)
+          input.aBuffer = newBuffer
+          return input
       - lang: go
         source: |-
           old := []byte("Hello")
