@@ -79,6 +79,16 @@ export function test() {
     } catch (e: any) {
       Test.assert(name, false, e.message);
     }
+
+    const expectedValue = "Hello 🌍 World!🌍"
+    // json encoded base64 string
+    const inputE = JSON.stringify(Host.arrayBufferToBase64((new TextEncoder()).encode(expectedValue).buffer))
+    const outputE = Test.call("reflectJsonEncodedByteBuffer", inputE).json();
+    Test.assertEqual(
+      "reflected byte buffer comes back the same",
+      outputE,
+      inputE
+    );
   });
 
   Test.group("check signature and type variations", () => {

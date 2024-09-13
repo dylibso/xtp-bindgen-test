@@ -41,6 +41,17 @@ func reflectByteBufferHost(kPtr uint64) uint64 {
 	return kRet.Offset()
 }
 
+//go:export reflectJsonEncodedByteBufferHost
+func reflectJsonEncodedByteBufferHost(kPtr uint64) uint64 {
+	kMem := pdk.FindMemory(kPtr)
+	k := kMem.ReadBytes()
+
+	// TODO should validate that we get base 64 here?
+
+	kRet := pdk.AllocateBytes(k)
+	return kRet.Offset()
+}
+
 //go:export noInputWithOutputHost
 func noInputWithOutputHost() uint64 {
 	mem := pdk.AllocateString("noInputWithOutputHost")

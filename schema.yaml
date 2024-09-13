@@ -99,6 +99,23 @@ exports:
       type: buffer
       description: The output byte buffer
 
+  reflectJsonEncodedByteBuffer:
+    description: |
+      This function takes a byte buffer and returns it.
+      Because it's json encoded, it should encode as a base64 json string.
+    codeSamples:
+      - lang: typescript
+        source: |
+          return reflectJsonEncodedByteBufferHost(input)
+    input:
+      contentType: application/json
+      type: buffer
+      description: The input byte buffer
+    output:
+      contentType: application/json
+      type: buffer
+      description: The output byte buffer
+
   noInputWithOutput:
     description: a function that takes no input, but returns an output
     output:
@@ -180,6 +197,18 @@ exports:
       contentType: application/json
       $ref: "#/components/schemas/KitchenSinkObject"
     codeSamples:
+      - lang: typescript
+        source: |-
+          const encoder = new TextEncoder()
+          const oldBytes = encoder.encode("Hello")
+          const newBytes = encoder.encode("Goodbye")
+          const bufferView = new Uint8Array(input.aBuffer)
+          const newBuffer = new ArrayBuffer(newBytes.length + bufferView.length - oldBytes.length)
+          const newBufferView = new Uint8Array(newBuffer)
+          newBufferView.set(newBytes, 0)
+          newBufferView.set(bufferView.subarray(oldBytes.length), newBytes.length)
+          input.aBuffer = newBuffer
+          return input
       - lang: go
         source: |-
           old := []byte("Hello")
@@ -237,7 +266,7 @@ imports:
       contentType: text/plain; charset=utf-8
   reflectByteBufferHost:
     description: |
-      This function takes a bugger and returns it.
+      This function takes a byte buffer and returns it.
       Should come out the same way it came in. Same as export.
     input:
       contentType: application/x-binary
@@ -245,6 +274,18 @@ imports:
       description: The input byte buffer
     output:
       contentType: application/x-binary
+      type: buffer
+      description: The output byte buffer
+  reflectJsonEncodedByteBufferHost:
+    description: |
+      This function takes a byte buffer and returns it.
+      Because it's json encoded, it should encode as a base64 json string.
+    input:
+      contentType: application/json
+      type: buffer
+      description: The input byte buffer
+    output:
+      contentType: application/json
       type: buffer
       description: The output byte buffer
 
