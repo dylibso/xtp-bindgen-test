@@ -30,6 +30,7 @@ exports:
         source: |
           return pdk::reflectJsonObjectHost(std::move(input));
       - lang: python
+        source: |
           return reflect_json_object_host(input)
     input:
       contentType: application/json
@@ -66,6 +67,7 @@ exports:
         source: |
           return pdk::reflectUtf8StringHost(std::move(input));
       - lang: python
+        source: |
           return reflect_utf8_string_host(input)
     input:
       type: string
@@ -104,6 +106,7 @@ exports:
         source: |
           return pdk::reflectByteBufferHost(std::move(input));
       - lang: python
+        source: |
           return reflect_byte_buffer_host(input)
     input:
       contentType: application/x-binary
@@ -144,6 +147,7 @@ exports:
         source: |
           return pdk::noInputWithOutputHost();
       - lang: python
+        source: |
           return no_input_with_output_host()
 
   withInputNoOutput:
@@ -175,6 +179,7 @@ exports:
         source: |
           return pdk::withInputNoOutputHost(input);
       - lang: python
+        source: |
           return with_input_no_output_host(input)
 
   noInputNoOutput:
@@ -200,6 +205,7 @@ exports:
           pdk::noInputNoOutputHost();
           return std::expected<void, pdk::Error>();
       - lang: python
+        source: |
           return no_input_no_output_host()
   
   helloToGoodbyeReplacement:
@@ -266,6 +272,7 @@ exports:
           }
           return std::make_unique<pdk::KitchenSinkObject>(std::move(input));
       - lang: python
+        source: |
           input.aBuffer.replace(b"Hello", b"Goodbye")
           return reflect_json_object_host(input)
 
