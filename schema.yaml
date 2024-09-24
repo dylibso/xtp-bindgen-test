@@ -29,6 +29,8 @@ exports:
       - lang: c++
         source: |
           return pdk::reflectJsonObjectHost(std::move(input));
+      - lang: python
+          return reflect_json_object_host(input)
     input:
       contentType: application/json
       $ref: "#/components/schemas/KitchenSinkObject"
@@ -63,6 +65,8 @@ exports:
       - lang: c++
         source: |
           return pdk::reflectUtf8StringHost(std::move(input));
+      - lang: python
+          return reflect_utf8_string_host(input)
     input:
       type: string
       description: The input string
@@ -99,6 +103,8 @@ exports:
       - lang: c++
         source: |
           return pdk::reflectByteBufferHost(std::move(input));
+      - lang: python
+          return reflect_byte_buffer_host(input)
     input:
       contentType: application/x-binary
       type: buffer
@@ -137,6 +143,8 @@ exports:
       - lang: c++
         source: |
           return pdk::noInputWithOutputHost();
+      - lang: python
+          return no_input_with_output_host()
 
   withInputNoOutput:
     description: a function that takes input, but returns no output
@@ -166,6 +174,8 @@ exports:
       - lang: c++
         source: |
           return pdk::withInputNoOutputHost(input);
+      - lang: python
+          return with_input_no_output_host(input)
 
   noInputNoOutput:
     description: a function that takes no input, and returns no output
@@ -189,6 +199,8 @@ exports:
         source: |
           pdk::noInputNoOutputHost();
           return std::expected<void, pdk::Error>();
+      - lang: python
+          return no_input_no_output_host()
   
   helloToGoodbyeReplacement:
     description: a function that should replace `Hello` with `Goodbye` within a byte buffer field on KitchenSinkObject
@@ -253,6 +265,9 @@ exports:
             input.aBuffer = std::vector<uint8_t>(pString, pString + tomodify.size());
           }
           return std::make_unique<pdk::KitchenSinkObject>(std::move(input));
+      - lang: python
+          input.aBuffer.replace(b"Hello", b"Goodbye")
+          return reflect_json_object_host(input)
 
 imports:
   reflectJsonObjectHost:
