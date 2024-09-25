@@ -273,7 +273,7 @@ exports:
           return std::make_unique<pdk::KitchenSinkObject>(std::move(input));
       - lang: python
         source: |
-          input.aBuffer.replace(b"Hello", b"Goodbye"); return reflect_json_object_host(input)
+          input.aBuffer = input.aBuffer.replace(b"Hello", b"Goodbye"); return reflect_json_object_host(input)
 
 imports:
   reflectJsonObjectHost:
