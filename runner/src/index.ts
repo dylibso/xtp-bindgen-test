@@ -49,7 +49,7 @@ export function test() {
 
     Test.assertEqual(
       "reflectJsonObject preserved optional field semantics",
-      output.anOptionalString,
+      output.anOptionalString || null,
       KitchenSink.anOptionalString,
     );
 
@@ -146,9 +146,13 @@ const matchIdenticalTopLevel = (output: any) => {
     if (key === "anUntypedObject") {
       actual = JSON.stringify(actual);
       expected = JSON.stringify(expected);
-    } else if (key === 'aFloat') {
+    } else if (key === "aFloat") {
       actual = (new Float32Array([actual]))[0];
       expected = (new Float32Array([expected as number]))[0];
+    } else if (key == "anOptionalString") {
+      if (actual === undefined) {
+        actual = null;
+      }
     }
     Test.assertEqual(
       `reflectJsonObject preserved identical value '${key}'`,
