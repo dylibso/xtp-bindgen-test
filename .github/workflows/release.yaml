@@ -15,7 +15,7 @@ jobs:
 
       - name: Setup Extism
         run: |
-          curl -O https://raw.githubusercontent.com/extism/js-pdk/main/install.sh | bash
+          curl https://raw.githubusercontent.com/extism/js-pdk/main/install.sh | bash
 
       - name: Install TinyGo
         uses: acifani/setup-tinygo@v1.1.0
