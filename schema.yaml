@@ -222,7 +222,7 @@ exports:
           const encoder = new TextEncoder()
           const oldBytes = encoder.encode("Hello")
           const newBytes = encoder.encode("Goodbye")
-          const bufferView = new Uint8Array(input.aBuffer)
+          const bufferView = new Uint8Array(input.aBuffer!)
           const newBuffer = new ArrayBuffer(newBytes.length + bufferView.length - oldBytes.length)
           const newBufferView = new Uint8Array(newBuffer)
           newBufferView.set(newBytes, 0)
