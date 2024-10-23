@@ -6,6 +6,14 @@ const EmbeddedObject = {
   anEnumArray: ["option1", "option2", "option3"],
   anIntArray: [1, 2, 3],
   aDate: "2024-07-23T16:03:34.000Z",
+  anIntMap: {
+    'int1': 101,
+    'int2': 108,
+  },
+  aDateMap: {
+    'date1': "2024-07-23T16:03:34.000Z",
+    'date2': "2024-07-23T16:03:34.000Z",
+  }
 };
 
 const inputBufferString = "Hello 🌍 World!🌍";
@@ -30,11 +38,29 @@ const KitchenSink = {
     new TextEncoder().encode(inputBufferString).buffer,
   ),
   // aBuffer: "NzIsMTAxLDEwOCwxMDgsMTExLDMyLDI0MCwxNTksMTQwLDE0MSwzMiw4NywxMTEsMTE0LDEwOCwxMDAsMzMsMjQwLDE1OSwxNDAsMTQx",
+  aStringMap: {
+    'str1': "Hello",
+    'str2': "🌍",
+    'str3': "World!",
+  },
+  anObjectMap: {
+    'obj1': EmbeddedObject,
+    'obj2': EmbeddedObject,
+  },
+  anArrayMap: {
+    'array1': ["Hello", "🌍", "World!"],
+    'array2': ["Goodbye", "🌍", "World!"],
+  },
+  anEnumMap: {
+    'enum1': "option1",
+    'enum2': "option2",
+  }
 };
 
 export function test() {
   Test.group("schema v1-draft encoding types", () => {
     let input = JSON.stringify(KitchenSink);
+
     let output: typeof KitchenSink = Test.call("reflectJsonObject", input)
       .json();
 
@@ -52,6 +78,24 @@ export function test() {
       output.anOptionalString || null,
       KitchenSink.anOptionalString,
     );
+
+    let inputM = JSON.stringify({ "k1": [KitchenSink], "k2": [KitchenSink] });
+    let outputM: Record<string, typeof KitchenSink[]> = Test.call("reflectMap", inputM)
+      .json()
+
+    for (const [_, v] of Object.entries(outputM)) {
+      const m = v[0];
+      matchIdenticalTopLevel(m);
+      matchIdenticalEmbedded(m.anEmbeddedObject);
+      m.anEmbeddedObjectArray.forEach(matchIdenticalEmbedded);
+      matchDate(m);
+    }
+
+    Test.assertEqual(
+      `reflectMap preserved optional field semantics`,
+      outputM["k1"][0].anOptionalString || null,
+      KitchenSink.anOptionalString
+    )
 
     let inputS = KitchenSink.aString;
     let outputS = Test.call("reflectUtf8String", inputS).text();
@@ -138,6 +182,10 @@ const matchIdenticalTopLevel = (output: any) => {
     "anUntypedObject",
     "anEnum",
     "aBuffer",
+    "anObjectMap",
+    "anArrayMap",
+    "anEnumMap",
+    "aStringMap",
   ] as const;
   matchIdentical.forEach((k: typeof matchIdentical[number]) => {
     let key: keyof typeof KitchenSink = k;
@@ -170,6 +218,8 @@ const matchIdenticalEmbedded = (embedded: any) => {
     "aStringArray",
     "anEnumArray",
     "anIntArray",
+    "anIntMap",
+    "aDateMap",
   ] as const;
   matchIdenticalEmbedded.forEach((k: typeof matchIdenticalEmbedded[number]) => {
     let key: keyof typeof EmbeddedObject = k;
