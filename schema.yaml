@@ -468,7 +468,7 @@ components:
           additionalProperties:
             type: array
             items:
-              type: string
+              $ref: "#/components/schemas/EmbeddedObject"
         anEnumMap:
           description: a map of enums
           type: object
