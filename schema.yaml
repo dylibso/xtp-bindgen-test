@@ -154,7 +154,7 @@ exports:
     description: a function that takes input, but returns no output
     input:
       contentType: application/json
-      type: number
+      type: integer
     codeSamples:
       - lang: typescript
         source: |
@@ -322,7 +322,7 @@ imports:
     description: a function that takes input, but returns no output
     input:
       contentType: application/json
-      type: number
+      type: integer
 
   noInputNoOutputHost:
     description: a function that takes no input, and returns no output
