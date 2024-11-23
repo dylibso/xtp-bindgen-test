@@ -249,7 +249,6 @@ exports:
           Ok(output)
       - lang: zig
         source: |-
-          const std = @import("std");
           var output = input;
           const old = "Hello";
           const new = "Goodbye";
