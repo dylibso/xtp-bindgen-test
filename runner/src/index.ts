@@ -123,6 +123,22 @@ export function test() {
     );
   });
 
+  Test.group("check null payload handling", () => {
+    const nullObjOutput = Test.call("handleNullJsonObject", undefined);
+    Test.assert(
+      "handleNullJsonObject is called successfully",
+      !nullObjOutput.json(),
+      `expected empty output, got: ${nullObjOutput.text()}`,
+    );
+
+    const nullStrOutput = Test.call("handleNullJsonString", undefined);
+    Test.assert(
+      "handleNullJsonString is called successfully",
+      !nullObjOutput.json(),
+      `expected empty output, got: ${nullStrOutput.text()}`,
+    );
+  });
+
   return 0;
 }
 

@@ -1,5 +1,70 @@
+# yaml-language-server: $schema=https://xtp.dylibso.com/assets/wasm/schema.json
 version: v1-draft
 exports:
+  handleNullJsonObject:
+    description: This function takes a null JSON object, and it should not throw an error.
+    codeSamples:
+      - lang: typescript
+        source: |
+          return nullJsonObjectHost()
+      - lang: go
+        source: |
+          return NullJsonObjectHost()
+      - lang: csharp
+        source: |
+          return Host.NullJsonObjectHost();
+      - lang: zig
+        source: |
+          return Host.nullJsonObjectHost();
+      - lang: rust
+        source: |
+          pdk::null_json_object_host()
+      - lang: c++
+        source: |
+          return pdk::nullJsonObjectHost();
+      - lang: python
+        source: |
+          return null_json_object_host()
+    input:
+      contentType: application/json
+      $ref: "#/components/schemas/KitchenSinkObject"
+      nullable: true
+    output:
+      contentType: application/json
+      $ref: "#/components/schemas/KitchenSinkObject"
+      nullable: true
+  handleNullJsonString:
+    description: This function takes a null JSON string, and it should not throw an error.
+    codeSamples:
+      - lang: typescript
+        source: |
+          return nullJsonStringHost()
+      - lang: go
+        source: |
+          return NullJsonStringHost()
+      - lang: csharp
+        source: |
+          return Host.NullJsonStringHost();
+      - lang: zig
+        source: |
+          return Host.nullJsonStringHost();
+      - lang: rust
+        source: |
+          pdk::null_json_string_host()
+      - lang: c++
+        source: |
+          return pdk::nullJsonStringHost();
+      - lang: python
+        source: |
+          return null_json_string_host()
+    input:
+      contentType: application/json
+      type: string
+      nullable: true
+    output:
+      contentType: application/json
+      type: string
+      nullable: true
   reflectJsonObject:
     description: |
       This function takes a KitchenSinkObject and returns a KitchenSinkObject.
@@ -275,6 +340,20 @@ exports:
           input.aBuffer = input.aBuffer.replace(b"Hello", b"Goodbye"); return input
 
 imports:
+  nullJsonObjectHost:
+    description: |
+      This function always returns a null JSON object.
+    output:
+      contentType: application/json
+      $ref: "#/components/schemas/KitchenSinkObject"
+      nullable: true
+  nullJsonStringHost:
+    description: |
+      This function always returns a null JSON string.
+    output:
+      contentType: application/json
+      type: string
+      nullable: true
   reflectJsonObjectHost:
     description: |
       This function takes a KitchenSinkObject and returns a KitchenSinkObject.

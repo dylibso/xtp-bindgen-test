@@ -6,6 +6,16 @@ import (
 	"github.com/extism/go-pdk"
 )
 
+//go:export nullJsonObjectHost
+func nullObjectHost() uint64 {
+	return 0
+}
+
+//go:export nullJsonStringHost
+func nullJsonStringHost() uint64 {
+	return 0
+}
+
 //go:export reflectJsonObjectHost
 func reflectJsonObjectHost(kPtr uint64) uint64 {
 	kMem := pdk.FindMemory(kPtr)
