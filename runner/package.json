@@ -15,6 +15,6 @@
     "@extism/js-pdk": "^1.1.1"
   },
   "dependencies": {
-    "@dylibso/xtp-test": "^0.0.9"
+    "@dylibso/xtp-test": "^0.0.10"
   }
 }
