@@ -255,7 +255,7 @@ exports:
           var arr = std.ArrayList(u8).init(std.heap.wasm_allocator);
 
           try arr.insertSlice(0, new);
-          try arr.insertSlice(new.len, input.aBuffer[old.len..]);
+          try arr.insertSlice(new.len, input.aBuffer.?[old.len..]);
           output.aBuffer = try arr.toOwnedSlice();
           return output;
       - lang: c++
