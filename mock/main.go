@@ -6,12 +6,36 @@ import (
 	"github.com/extism/go-pdk"
 )
 
+//go:export reflectMapHost
+func reflectMapHost(kPtr uint64) uint64 {
+	kMem := pdk.FindMemory(kPtr)
+	k := string(kMem.ReadBytes())
+
+	var obj map[string]interface{}
+	err := pdk.JSONFrom(kPtr, &obj)
+	if err != nil {
+		pdk.SetError(err)
+		return 0
+	}
+
+	fmt.Println(k)
+
+	kRet := pdk.AllocateString(k)
+	return kRet.Offset()
+}
+
 //go:export reflectJsonObjectHost
 func reflectJsonObjectHost(kPtr uint64) uint64 {
 	kMem := pdk.FindMemory(kPtr)
 	k := string(kMem.ReadBytes())
 
-	// TODO should validate that we get json by trying to parse it
+	var obj map[string]interface{}
+	err := pdk.JSONFrom(kPtr, &obj)
+	if err != nil {
+		pdk.SetError(err)
+		return 0
+	}
+
 	fmt.Println(k)
 
 	kRet := pdk.AllocateString(k)
