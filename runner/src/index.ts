@@ -6,6 +6,11 @@ const EmbeddedObject = {
   anEnumArray: ["option1", "option2", "option3"],
   anIntArray: [1, 2, 3],
   aDate: "2024-07-23T16:03:34.000Z",
+  aDateArray: [
+    "2024-07-23T16:03:34.000Z",
+    "2024-08-23T16:03:35.000Z",
+    "2024-09-23T16:03:36.000Z",
+  ]
 };
 
 const inputBufferString = "Hello 🌍 World!🌍";
@@ -79,6 +84,30 @@ export function test() {
     } catch (e: any) {
       Test.assert(name, false, e.message);
     }
+  });
+
+  Test.group("schema v1-draft mutating object", () => {
+    let input = JSON.stringify(EmbeddedObject);
+    let output: typeof EmbeddedObject = Test.call("mutateObject", input).json();
+    Test.assertEqual('has bools', output.aBoolArray.length, 3)
+    output.aBoolArray.forEach((b, i) => {
+      Test.assertEqual(`inverted ${b}`, b, !EmbeddedObject.aBoolArray[i])
+    })
+
+    Test.assertEqual('has strings', output.aStringArray.length, 3)
+    output.aStringArray.forEach((b, i) => {
+      Test.assertEqual(`mutated ${b}`, b, `hello ${EmbeddedObject.aStringArray[i]}`)
+    })
+
+    Test.assertEqual('has ints', output.anIntArray.length, 3)
+    output.anIntArray.forEach((b, i) => {
+      Test.assertEqual(`mutated ${b}`, b, EmbeddedObject.anIntArray[i] + 1)
+    })
+
+    Test.assertEqual('has dates', output.aDateArray.length, 3)
+    output.aDateArray.forEach((b, i) => {
+      Test.assertEqual(`one second added ${b}`, b, new Date((new Date(EmbeddedObject.aDateArray[i]).getTime() + 1000)).toISOString())
+    })
   });
 
   Test.group("check signature and type variations", () => {

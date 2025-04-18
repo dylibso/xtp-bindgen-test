@@ -274,6 +274,24 @@ exports:
         source: |
           input.aBuffer = input.aBuffer.replace(b"Hello", b"Goodbye"); return input
 
+  mutateObject:
+    description: |
+      This function takes an EmbeddedObject and mutates it. It tests that
+      types are properly cast to their language equivalents
+    codeSamples:
+      - lang: typescript
+        source: |
+          input.aBoolArray = input.aBoolArray.map(v => !v)
+          input.aStringArray = input.aStringArray.map(v => `hello ${v}`)
+          input.anIntArray = input.anIntArray.map(v => v + 1)
+          input.aDateArray = input.aDateArray.map(v => new Date(v.getTime() + 1000)) // add one second
+          return input
+    input:
+      contentType: application/json
+      $ref: "#/components/schemas/EmbeddedObject"
+    output:
+      contentType: application/json
+      $ref: "#/components/schemas/EmbeddedObject"
 imports:
   reflectJsonObjectHost:
     description: |
@@ -351,6 +369,12 @@ components:
           type: array
           items:
             type: integer
+        aDateArray:
+          description: a date array
+          type: array
+          items:
+            type: string
+            format: date-time
         aDate:
           description: a date
           type: string
