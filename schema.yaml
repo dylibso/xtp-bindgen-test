@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://xtp.dylibso.com/assets/wasm/schema.json
 version: v1-draft
 exports:
   reflectJsonObject:
@@ -274,6 +275,37 @@ exports:
         source: |
           input.aBuffer = input.aBuffer.replace(b"Hello", b"Goodbye"); return input
 
+  reflextMixedObject:
+    description: a function that takes a mixedobject and returns one testing required vs nullable
+    codeSamples:
+      - lang: typescript
+        source: |
+          return input
+      - lang: go
+        source: |-
+          return *input, err
+      - lang: csharp
+        source: |-
+          return input;
+      - lang: zig
+        source: |
+          return input;
+      - lang: rust
+        source: |
+          return _input
+      - lang: c++
+        source: |
+          return std::move(input);
+      - lang: python
+        source: |
+          return input
+    input:
+      contentType: application/json
+      $ref: "#/components/schemas/AMixedRequiredNullableObject"
+    output:
+      contentType: application/json
+      $ref: "#/components/schemas/AMixedRequiredNullableObject"
+
 imports:
   reflectJsonObjectHost:
     description: |
@@ -328,8 +360,30 @@ imports:
 
 components:
   schemas:
+    AMixedRequiredNullableObject:
+      description: An object which demonstrates different combinations of nullable and required
+      required:
+        - aRequiredNullableBool
+        - aRequiredNonNullableBool
+      properties:
+        aRequiredNonNullableBool:
+          type: boolean
+        aRequiredNullableBool:
+          type: boolean
+          nullable: true
+        aNonRequiredNonNullableBool:
+          type: boolean
+        aNonRequiredNullableBool:
+          type: boolean
+          nullable: true
     EmbeddedObject:
       description: An embedded object, has some arrays too
+      required:
+        - aBoolArray
+        - aStringArray
+        - anEnumArray
+        - anIntArray
+        - aDate
       properties:
         aBoolArray:
           description: an array of bools
@@ -364,6 +418,18 @@ components:
         - option3
     KitchenSinkObject:
       description: A json object with every type of property
+      required:
+        - aString
+        - anInt
+        - aDouble
+        - aFloat
+        - aBool
+        - anUntypedObject
+        - anEnum
+        - anEmbeddedObject
+        - anEmbeddedObjectArray
+        - aDate
+        - aBuffer
       properties:
         anOptionalString:
           type: string
