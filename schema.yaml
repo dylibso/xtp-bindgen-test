@@ -1,6 +1,26 @@
 # yaml-language-server: $schema=https://xtp.dylibso.com/assets/wasm/schema.json
 version: v1-draft
 exports:
+  reflectMap:
+    description: |
+      This function takes a map and returns the same map.
+    codeSamples:
+      - lang: typescript
+        source: |
+          // pass this through the host function and return it back
+          return reflectMapHost(input)
+    input:
+      contentType: application/json
+      additionalProperties:
+        type: array
+        items:
+          $ref: '#/components/schemas/KitchenSinkObject'
+    output:
+      contentType: application/json
+      additionalProperties:
+        type: array
+        items:
+          $ref: '#/components/schemas/KitchenSinkObject'
   reflectJsonObject:
     description: |
       This function takes a KitchenSinkObject and returns a KitchenSinkObject.
@@ -307,6 +327,24 @@ exports:
       $ref: "#/components/schemas/AMixedRequiredNullableObject"
 
 imports:
+  reflectMapHost:
+    description: |
+      This function takes a Map and returns a Map.
+      It should come out hte same way it came in. It's the same as the export.
+      But the export should call this.
+    input:
+      contentType: application/json
+      additionalProperties:
+        type: array
+        items:
+          $ref: '#/components/schemas/KitchenSinkObject'
+    output:
+      contentType: application/json
+      additionalProperties:
+        type: array
+        items:
+          $ref: '#/components/schemas/KitchenSinkObject'
+    
   reflectJsonObjectHost:
     description: |
       This function takes a KitchenSinkObject and returns a KitchenSinkObject.
@@ -409,6 +447,12 @@ components:
           description: a date
           type: string
           format: date-time
+        aDateMap:
+          description: a map of integers
+          type: object
+          additionalProperties:
+            type: string
+            format: date-time
     AStringEnum:
       description: A string enum
       type: string
@@ -473,3 +517,26 @@ components:
         aBuffer:
           description: a byte buffer
           type: buffer
+        aStringMap:
+          description: a map of strings
+          type: object
+          additionalProperties:
+            type: string
+        anObjectMap:
+          description: a map of objects
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/EmbeddedObject"
+        anArrayMap:
+          description: a map of arrays
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: "#/components/schemas/EmbeddedObject"
+        anEnumMap:
+          description: a map of enums
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/AStringEnum"
+
